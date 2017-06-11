@@ -8,3 +8,7 @@
   </tr>
 %end
 </table>
+
+<form action="/">
+	<input type="submit" name="back" value="back...">
+</form>
