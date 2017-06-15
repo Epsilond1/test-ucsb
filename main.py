@@ -1,9 +1,9 @@
 # -*-coding:utf-8 -*-
 import postgresql
-from bottle import route, run, debug, template, get, request
+from bottle import route, run, debug, template, get, request, default_app, error
 import re
 
-db = postgresql.open('pq://postgres:postgres@laptop:5432/ussc')
+db = postgresql.open('pq://postgres:b4212cah@127.0.0.1:5432/ussc')
 
 
 @property
@@ -12,6 +12,11 @@ def charset(self, default='UTF-8'):
         return self.content_type.split('charset=')[-1].split(';')[0].strip()
     return default
 
+@error(500)
+@error(501)
+@error(502)
+def internralerror(code):
+	return 'Servery ploxo'
 
 def isvalidphone(phone):
     return re.match(r'[7-8]{1}[0-9]{9}', phone) and len(phone) == 11
@@ -50,7 +55,15 @@ def add_to_db():
     else:
         return template('errphone')
 
-debug(True)
-run()
+# debug(True)
+# run(port=888)
 
+if __name__ == '__main__':
+    run(host='188.116.57.50', port=8181)
+# Run bottle in application mode. Required in order to get the application working with uWSGI!
+else:
+    app = application = default_app()
+
+#bottle.run(app=StripPathMiddleware(app),server='python_server',host='188.116.57.50',port=9999)
+# test_ussc = application = default_app()
 db.close()
