@@ -1,6 +1,7 @@
 # -*-coding:utf-8 -*-
 import postgresql
 from bottle import route, run, debug, template, get, request
+import re
 
 db = postgresql.open('pq://postgres:postgres@laptop:5432/ussc')
 
@@ -12,8 +13,8 @@ def charset(self, default='UTF-8'):
     return default
 
 
-def checkphone(phone):
-    pass
+def isvalidphone(phone):
+    return re.match(r'[7-8]{1}[0-9]{9}', phone) and len(phone) == 11
 
 
 @route('/')
@@ -27,14 +28,27 @@ def printdb():
     return template('input', rows=result)
 
 
+def stripchar(pattern, sym):
+    result = ""
+    for i in range(len(pattern)):
+        if pattern[i] in sym:
+            continue
+        else:
+            result += pattern[i]
+
+    return result
+
+
 @route('/add', method='POST')
 def add_to_db():
-    phone = str(request.POST.get('phone').strip())
-    user = str(request.POST.get('name').strip())
-    index = db.query("select count(*) from users")[0][0] + 1
-    db.query("insert into users (id,pnumber,uname) values({0}, '{1}', '{2}');".format(index, phone, user))
-    return template('success')
-
+    phone = stripchar(str(request.POST.get('phone').strip()), ['', ' ', '(', ')', '-', '+'])
+    user = request.POST.get('name')
+    if isvalidphone(phone):
+        index = db.query("select count(*) from users")[0][0] + 1
+        db.query("insert into users (id,pnumber,uname) values({0}, '{1}', '{2}');".format(index, phone, user))
+        return template('success')
+    else:
+        return template('errphone')
 
 debug(True)
 run()
