@@ -1,9 +1,18 @@
+#!/usr/bin/python3.5
 # -*-coding:utf-8 -*-
 import postgresql
 from bottle import route, run, debug, template, get, request, default_app, error
 import re
+import datetime
 
-db = postgresql.open('pq://postgres:b4212cah@127.0.0.1:5432/ussc')
+log_broker = open('log-main-application.log', 'a')
+
+try:
+    db = postgresql.open('pq://postgres:b4212cah@188.116.57.50:5432/ussc')
+except Exception:
+    log_broker.writelines('{0} Fail on connect to database\n'.format(datetime.datetime.now()))
+else:
+    log_broker.writelines('{0} Connect to DB succesfull\n'.format(datetime.datetime.now()))
 
 
 @property
@@ -16,7 +25,7 @@ def charset(self, default='UTF-8'):
 @error(501)
 @error(502)
 def internralerror(code):
-	return 'Servery ploxo'
+	return 'Servery ploxo {0}'.format(code)
 
 def isvalidphone(phone):
     return re.match(r'[7-8]{1}[0-9]{9}', phone) and len(phone) == 11
@@ -24,13 +33,13 @@ def isvalidphone(phone):
 
 @route('/')
 def main():
-    return template('main_forms')
+    return template('main_forms.tpl')
 
 
 @get('/show')
 def printdb():
     result = db.query('SELECT * FROM users')
-    return template('input', rows=result)
+    return template('input.tpl', rows=result)
 
 
 def stripchar(pattern, sym):
@@ -51,9 +60,9 @@ def add_to_db():
     if isvalidphone(phone):
         index = db.query("select count(*) from users")[0][0] + 1
         db.query("insert into users (id,pnumber,uname) values({0}, '{1}', '{2}');".format(index, phone, user))
-        return template('success')
+        return template('success.tpl')
     else:
-        return template('errphone')
+        return template('errphone.tpl')
 
 # debug(True)
 # run(port=888)
@@ -62,8 +71,9 @@ if __name__ == '__main__':
     run(host='188.116.57.50', port=8181)
 # Run bottle in application mode. Required in order to get the application working with uWSGI!
 else:
-    app = application = default_app()
+    application = app = default_app()
 
-#bottle.run(app=StripPathMiddleware(app),server='python_server',host='188.116.57.50',port=9999)
+# bottle.run(app=StripPathMiddleware(app),server='python_server',host='188.116.57.50',port=9999)
 # test_ussc = application = default_app()
-db.close()
+# db.close()
+log_broker.close()
