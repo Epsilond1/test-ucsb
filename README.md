@@ -21,24 +21,20 @@
 Само приложение находится здесь: http://188.116.57.50:9595/
 
 ### Структура базы данных:
-
 <table>
-<tr>
-<td>ID pnumber name</td>
-</tr>
-  <tr>
-  <td>1 | 79521451329 | Ð¡ÐµÐ¼Ñ\u0091Ð½</td>
-  </tr>
-  <tr>
-  <td>2 | 79521451329 | Semyon</td<
-  </tr>
-  <tr>
-  <td>3 | 89521451329 | Alyona</td>
-  </tr>
-  <tr>
-  <td>4 | 79521451329 | cartographers</td>
-  </tr>
-  <tr>
-  <td>5 | 88005553535 | Ð¡Ð°Ð½Ñ\u008F</td>
-  </tr>
+	<tr>
+		<td>ID</td>
+		<td>pnumber</td>
+		<td>name</td>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>79521451329</td>
+		<td>Semyon</td>
+	</tr>
+	<tr>
+		<td>2</td>
+		<td>11111111111</td>
+		<td>user</td>
+	</tr>
 </table>
