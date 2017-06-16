@@ -23,6 +23,9 @@
 ### Структура базы данных:
 
 <table>
+<tr>
+<td>ID</td><td>pnumber<td><td>name</td>
+</tr>
   <tr>
   <td>1 | 79521451329 | Ð¡ÐµÐ¼Ñ\u0091Ð½</td>
   </tr>
