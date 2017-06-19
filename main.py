@@ -8,7 +8,7 @@ import datetime
 log_broker = open('log-main-application.log', 'a')
 
 try:
-    db = postgresql.open('pq://postgres:b4212cah@188.116.57.50:5432/ussc')
+    db = postgresql.open('pq://postgres:password@188.116.57.50:5432/ussc')
 except Exception:
     log_broker.writelines('{0} Fail on connect to database\n'.format(datetime.datetime.now()))
 else:
